@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -11,7 +12,7 @@ export class RegisterComponent implements OnInit {
   senha = '';
   confirmarSenha = '';
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
   }
@@ -28,6 +29,14 @@ export class RegisterComponent implements OnInit {
       .subscribe((value) => {
         alert('Usuário criado com sucesso');
         console.log(value);
+
+        localStorage.setItem('token', value.idToken);
+        this.router.navigateByUrl('/auth/login');
+
+        this.authService.setUser({
+          email: value.email,
+          id: value.localId
+        });
       });
   }
 

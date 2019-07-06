@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TodoService } from './todo/todo.service';
 import { map, debounceTime } from 'rxjs/operators';
 import { AuthService } from './auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -12,12 +13,13 @@ export class AppComponent implements OnInit {
   contador = 0;
   email = '';
 
-  constructor(public todoService: TodoService, private authService: AuthService) {
+  constructor(public todoService: TodoService, private authService: AuthService, private router: Router) {
   }
 
   logout() {
     localStorage.removeItem('token');
     this.authService.setUser(null);
+    this.router.navigateByUrl('/auth/login');
   }
 
   ngOnInit() {
@@ -25,8 +27,10 @@ export class AppComponent implements OnInit {
 
     if (token) {
       this.authService.verifyToken(token).subscribe((v: any) => {
+
         this.authService.setUser({
           email: v.users[0].email,
+          id: v.users[0].localId,
         });
       });
     }

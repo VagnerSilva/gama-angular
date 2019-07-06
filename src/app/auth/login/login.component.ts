@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,7 @@ export class LoginComponent implements OnInit {
   email = '';
   senha = '';
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
   }
@@ -24,9 +25,11 @@ export class LoginComponent implements OnInit {
           alert('Usuário logado com sucesso');
           console.log(value);
           localStorage.setItem('token', value.idToken);
+          this.router.navigateByUrl('/cep');
 
           this.authService.setUser({
             email: value.email,
+            id: value.localId
           });
         },
         (error) => {
